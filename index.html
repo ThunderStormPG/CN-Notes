@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Computer Networks - Survival Guide</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --text-color: #e2e8f0;
+            --primary: #38bdf8;
+            --secondary: #818cf8;
+            --card-bg: #1e293b;
+            --accent: #f472b6;
+            --success: #4ade80;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            width: 100%;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            padding: 2rem 0;
+            text-align: center;
+            border-bottom: 2px solid var(--primary);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            background: -webkit-linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 90%;
+            margin: 2rem auto;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            color: var(--primary);
+            border-bottom: 2px dashed #334155;
+            padding-bottom: 0.5rem;
+            margin-top: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            border-left: 4px solid var(--secondary);
+            transition: transform 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+        }
+
+        h3 {
+            margin-top: 0;
+            color: var(--accent);
+            font-size: 1.3rem;
+        }
+
+        strong {
+            color: #facc15;
+        }
+
+        .mnemonic {
+            background-color: rgba(56, 189, 248, 0.1);
+            border: 1px solid var(--primary);
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-style: italic;
+            color: var(--primary);
+        }
+
+        .qa-tag {
+            display: inline-block;
+            background-color: var(--secondary);
+            color: #000;
+            font-weight: bold;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-bottom: 10px;
+            margin-right: 5px;
+        }
+
+        ul,
+        ol {
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .highlight {
+            color: var(--success);
+            font-weight: bold;
+        }
+
+        .quick-snips {
+            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+            border: 2px solid var(--accent);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-top: 3rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 0 20px rgba(244, 114, 182, 0.2);
+        }
+
+        .quick-snips h2 {
+            color: var(--accent);
+            text-align: center;
+            margin-top: 0;
+        }
+
+        .quick-snips ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .quick-snips li {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            border-left: 3px solid var(--accent);
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>Computer Networks: Survival Guide</h1>
+        <p style="margin-top: 10px; color: #94a3b8;">Syllabus + Model Paper Solved in Hinglish</p>
+    </header>
+
+    <div class="container">
+
+        <!-- UNIT 1 -->
+        <h2 class="section-title">📚 Unit 1: Basics & Hardware</h2>
+
+        <div class="card">
+            <span class="qa-tag">Q5, Q18</span> <span class="qa-tag">Q17</span>
+            <h3>Data Communication Components & Network Definition</h3>
+            <p><strong>Network:</strong> Jab do ya do se zyada devices aapas me connect hote hain data share karne ke
+                liye, use network kehte hain.</p>
+            <p><strong>5 Basic Components:</strong></p>
+            <ul>
+                <li><strong>Sender:</strong> Jo bhej raha hai (Computer/Mobile).</li>
+                <li><strong>Message:</strong> Jo data bhej raha hai (Text/Video).</li>
+                <li><strong>Transmission Medium:</strong> Rasta (Cable/Wi-Fi).</li>
+                <li><strong>Protocol:</strong> Rules (Jaise TCP/IP).</li>
+                <li><strong>Receiver:</strong> Jo le raha hai (Destination).</li>
+            </ul>
+            <div class="mnemonic">Mnemonic: <strong>"SMTP-R"</strong> (Sender, Message, Transmission Medium, Protocol,
+                Receiver)</div>
+        </div>
+
+        <div class="card">
+            <span class="qa-tag">Q6</span> <span class="qa-tag">Q22</span>
+            <h3>Types of Networks (LAN, MAN, WAN)</h3>
+            <ul>
+                <li><strong>LAN (Local Area Network):</strong> Small area (Room, Building). <em>Example: College
+                        lab.</em></li>
+                <li><strong>MAN (Metropolitan Area Network):</strong> City level. <em>Example: Cable TV network.</em>
+                </li>
+                <li><strong>WAN (Wide Area Network):</strong> Country/Global. <em>Example: The Internet.</em></li>
+            </ul>
+            <div class="mnemonic">Mnemonic: <strong>L</strong>ittle <strong>M</strong>edium <strong>W</strong>orld (LAN
+                &lt; MAN &lt; WAN)</div>
+        </div>
+
+        <div class="card">
+            <span class="qa-tag">Q7</span>
+            <h3>Latency & Throughput</h3>
+            <ul>
+                <li><strong>Latency (Delay):</strong> Data ko point A se B tak pahunchne me kitna time laga. (Travel
+                    time).</li>
+                <li><strong>Throughput (Speed):</strong> Actual rate of successful data transfer. (Speed of the car).
+                </li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <span class="qa-tag">Q10</span> <span class="qa-tag">Q23</span>
+            <h3>Network Topologies (Mesh vs Star)</h3>
+            <ul>
+                <li><strong>Mesh:</strong> Har device dusre se juda hai. <em>Example: Military communication.</em>
+                    (Pros: Very secure. Cons: Bahut wiring lagti hai).</li>
+                <li><strong>Star:</strong> Sab devices ek central Hub/Switch se jude hain. <em>Example: Office
+                        network.</em> (Pros: Easy to install. Cons: Central Hub mar gaya toh network dead).</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <span class="qa-tag">Q1</span> <span class="qa-tag">Q11</span>
+            <h3>OSI Model vs TCP/IP Model</h3>
+            <p><strong>OSI Model (7 Layers - Theoretical):</strong></p>
+            <ol>
+                <li><strong>P</strong>hysical (Cables)</li>
+                <li><strong>D</strong>ata Link (Framing, MAC)</li>
+                <li><strong>N</strong>etwork (Routing, IP)</li>
+                <li><strong>T</strong>ransport (End-to-end, TCP/UDP)</li>
+                <li><strong>S</strong>ession (Start/Stop)</li>
+                <li><strong>P</strong>resentation (Encryption)</li>
+                <li><strong>A</strong>pplication (User interface)</li>
+            </ol>
+            <div class="mnemonic">Mnemonic: <strong>P</strong>lease <strong>D</strong>o <strong>N</strong>ot
+                <strong>T</strong>hrow <strong>S</strong>ausage <strong>P</strong>izza <strong>A</strong>way</div>
+            <p><strong>TCP/IP Model (4 Layers - Practical):</strong> Network Access, Internet, Transport, Application.
+            </p>
+            <p><strong>Difference:</strong> OSI is theoretical (7 layers), TCP/IP is practical/used in real life (4
+                layers).</p>
+        </div>
+
+        <div class="card">
+            <span class="qa-tag">Q2</span> <span class="qa-tag">Q19</span>
+            <h3>Hub vs Switch vs Router</h3>
+            <ul>
+                <li><strong>Hub:</strong> Dumb device, sabko data bhejta hai. <span class="highlight">Physical
+                        Layer</span>.</li>
+                <li><strong>Switch:</strong> Smart, sirf target ko bhejta hai (MAC address). <span
+                        class="highlight">Data Link Layer</span>.</li>
+                <li><strong>Router:</strong> Connects different networks (LAN to WAN), uses IP. <span
+                        class="highlight">Network Layer</span>.</li>
+            </ul>
+            <p><em>Note (Q19):</em> Repeater is at Physical Layer, Gateway operates at all layers (mostly Application).
+            </p>
+        </div>
+
+        <div class="card">
+            <span class="qa-tag">Q16</span>
+            <h3>Transmission Media</h3>
+            <ul>
+                <li><strong>Guided:</strong> Wires hain (Tangible). <em>Example: Twisted Pair, Fiber Optics.</em></li>
+                <li><strong>Unguided:</strong> Wireless (Intangible). <em>Example: Wi-Fi, Radio waves.</em></li>
+            </ul>
+        </div>
+
+        <!-- UNIT 2 -->
+        <h2 class="section-title">⚙️ Unit 2: Data Link Layer & Error Control</h2>
+
+        <div class="card">
+            <span class="qa-tag">Q8</span>
+            <h3>Duties of Data Link Layer</h3>
+            <p>Major duty: <strong>Framing</strong> (Packing bits into frames) and <strong>Error Control</strong>
+                (Checking if data is corrupted).</p>
+        </div>
+
+        <div class="card">
+            <span class="qa-tag">Q9, Q15, Q21</span>
+            <h3>Stuffing (Bit vs Byte)</h3>
+            <p>Used to distinguish between actual data and control flags.</p>
+            <ul>
+                <li><strong>Bit Stuffing:</strong> Agar data mein flag (`01111110`) jaisa pattern aa raha hai, toh
+                    sender `1` ke baad ek extra `0` daal deta hai.</li>
+                <li><strong>Byte Stuffing:</strong> Same concept but with bytes/characters. Extra byte (ESC) insert
+                    karte hain.</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <span class="qa-tag">Q3</span> <span class="qa-tag">Q12</span>
+            <h3>Error Detection: CRC (Cyclic Redundancy Check)</h3>
+            <p><strong>Concept:</strong> Data ko generator polynomial se divide karte hain. Remainder hi CRC hota hai.
+            </p>
+            <p><strong>Steps:</strong></p>
+            <ol>
+                <li><strong>Append Zeros:</strong> Generator jitna lamba hai (suppose 4 bits), data ke end mein utne
+                    minus 1 (i.e., 3) zeros lagao.</li>
+                <li><strong>XOR Division:</strong> Binary division karo (XOR logic use karo).</li>
+                <li><strong>Remainder:</strong> Jo bacha wo CRC hai.</li>
+                <li><strong>Codeword:</strong> Original Data + CRC.</li>
+            </ol>
+            <p><em>Exam Tip: Binary XOR calculation zaroor practice karo paper pe.</em></p>
+        </div>
+
+        <div class="card">
+            <span class="qa-tag">Q5</span> <span class="qa-tag">Q13</span>
+            <h3>Error Correction: Hamming Code</h3>
+            <p><strong>Rule:</strong> Number of parity bits \(r\) formula: <strong>\(2^r \geq m + r + 1\)</strong>
+                (where \(m\) = data bits).</p>
+            <p><strong>Steps for Data 10011 (5 bits):</strong></p>
+            <ol>
+                <li><strong>Find r:</strong> Try \(r=4\): \(2^4 = 16\), \(5+4+1=10\). \(16 \geq 10\). So, 4 parity bits.
+                </li>
+                <li><strong>Positions:</strong> Parity bits at 1, 2, 4, 8.</li>
+                <li><strong>Even Parity Calculation:</strong> Make total number of 1s even for each group (P1 checks
+                    1,3,5,7,9; P2 checks 2,3,6,7, etc.).</li>
+            </ol>
+        </div>
+
+        <div class="card">
+            <span class="qa-tag">Q14</span> <span class="qa-tag">Q20</span>
+            <h3>ARQ (Automatic Repeat reQuest)</h3>
+            <ul>
+                <li><strong>Go-Back-N (GBN):</strong> Ek packet kharab hua toh us packet se lekar piche ke saare packets
+                    dobara bhejta hai.</li>
+                <li><strong>Selective Repeat (SR):</strong> Sirf kharab wala packet dobara bheja jata hai.</li>
+            </ul>
+            <p><strong>Q20 Answer:</strong> <strong>Selective Repeat</strong> is more efficient on noisy links because
+                it only retransmits the lost/damaged frames, saving bandwidth.</p>
+        </div>
+
+        <!-- QUICK REVISION -->
+        <div class="quick-snips">
+            <h2>⚡ Quick Memo Snippets (Ratta Maar)</h2>
+            <ul>
+                <li><strong>Components:</strong> Sender, Receiver, Message, Medium, Protocol.</li>
+                <li><strong>OSI Layers:</strong> Physical, Data Link, Network, Transport, Session, Presentation,
+                    Application.</li>
+                <li><strong>Devices:</strong> Hub (Physical) | Switch (Data Link) | Router (Network).</li>
+                <li><strong>Networks:</strong> LAN (Building) | MAN (City) | WAN (World).</li>
+                <li><strong>CRC:</strong> Binary Division (XOR). Remainder = CRC.</li>
+                <li><strong>Hamming:</strong> \(2^r \geq m+r+1\). Even parity = total 1s even.</li>
+                <li><strong>Topologies:</strong> Mesh (Secure, Expensive) | Star (Central Hub, Easy).</li>
+                <li><strong>ARQ:</strong> GBN (Resends all) vs SR (Resends only lost). SR is better for noisy links.
+                </li>
+            </ul>
+        </div>
+
+    </div>
+
+</body>
+
+</html>
