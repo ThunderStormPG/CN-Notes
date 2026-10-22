@@ -1,43 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Computer Networks - Survival Guide</title>
+    <title>Cyber Security - Survival Guide</title>
     <style>
         :root {
-            --bg-color: #0f172a;
-            --text-color: #e2e8f0;
-            --primary: #38bdf8;
-            --secondary: #818cf8;
+            --bg-color: #0b1120;
+            --text-color: #cbd5e1;
+            --primary: #06b6d4;
+            --secondary: #8b5cf6;
             --card-bg: #1e293b;
-            --accent: #f472b6;
-            --success: #4ade80;
+            --accent: #f43f5e;
+            --success: #10b981;
+            --warning: #f59e0b;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
-            line-height: 1.6;
+            line-height: 1.7;
             margin: 0;
             padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
         }
 
         header {
-            width: 100%;
-            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-            padding: 2rem 0;
+            background: linear-gradient(135deg, #1e1b4b 0%, #0b1120 100%);
+            padding: 2.5rem 1rem;
             text-align: center;
             border-bottom: 2px solid var(--primary);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.6);
         }
 
         h1 {
@@ -46,12 +39,19 @@
             background: -webkit-linear-gradient(45deg, var(--primary), var(--secondary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            letter-spacing: 1px;
+        }
+
+        .subtitle {
+            color: #94a3b8;
+            margin-top: 10px;
+            font-size: 1.1rem;
         }
 
         .container {
             max-width: 900px;
-            width: 90%;
-            margin: 2rem auto;
+            margin: 3rem auto;
+            padding: 0 1.5rem;
         }
 
         .section-title {
@@ -59,8 +59,8 @@
             color: var(--primary);
             border-bottom: 2px dashed #334155;
             padding-bottom: 0.5rem;
-            margin-top: 2rem;
-            margin-bottom: 1.5rem;
+            margin-top: 3rem;
+            margin-bottom: 2rem;
         }
 
         .card {
@@ -68,286 +68,224 @@
             border-radius: 12px;
             padding: 1.5rem;
             margin-bottom: 1.5rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
             border-left: 4px solid var(--secondary);
-            transition: transform 0.2s ease;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
         .card:hover {
             transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.5);
         }
 
         h3 {
             margin-top: 0;
             color: var(--accent);
             font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        strong {
-            color: #facc15;
-        }
+        strong { color: #f8fafc; }
+        .highlight { color: var(--warning); font-weight: 600; }
+        .code { font-family: monospace; background: #000; padding: 2px 6px; border-radius: 4px; color: var(--success); }
 
         .mnemonic {
-            background-color: rgba(56, 189, 248, 0.1);
+            background-color: rgba(6, 182, 212, 0.1);
             border: 1px solid var(--primary);
-            padding: 10px;
+            padding: 12px;
             border-radius: 8px;
-            margin-top: 10px;
-            font-style: italic;
+            margin-top: 15px;
             color: var(--primary);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
         }
 
-        .qa-tag {
-            display: inline-block;
-            background-color: var(--secondary);
-            color: #000;
-            font-weight: bold;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            margin-bottom: 10px;
-            margin-right: 5px;
+        .mnemonic::before {
+            content: "💡";
+            margin-right: 10px;
+            font-size: 1.2rem;
         }
 
-        ul,
-        ol {
-            padding-left: 20px;
-        }
+        ul, ol { padding-left: 20px; }
+        li { margin-bottom: 8px; }
 
-        li {
-            margin-bottom: 8px;
-        }
-
-        .highlight {
-            color: var(--success);
-            font-weight: bold;
-        }
-
-        .quick-snips {
-            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
-            border: 2px solid var(--accent);
+        .quick-revision {
+            background: linear-gradient(135deg, #1e1b4b 0%, #2e1065 100%);
+            border: 2px solid var(--secondary);
             border-radius: 12px;
             padding: 2rem;
             margin-top: 3rem;
             margin-bottom: 3rem;
-            box-shadow: 0 0 20px rgba(244, 114, 182, 0.2);
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.2);
         }
 
-        .quick-snips h2 {
-            color: var(--accent);
+        .quick-revision h2 {
+            color: var(--secondary);
             text-align: center;
             margin-top: 0;
+            font-size: 1.6rem;
         }
 
-        .quick-snips ul {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        .quick-snips li {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 10px;
+        .quick-revision ul { list-style-type: none; padding: 0; }
+        .quick-revision li {
+            background: rgba(255,255,255,0.05);
+            padding: 12px;
             margin-bottom: 10px;
-            border-radius: 6px;
-            border-left: 3px solid var(--accent);
+            border-radius: 8px;
+            border-left: 3px solid var(--warning);
+        }
+
+        /* Print settings for PDF export */
+        @media print {
+            body { background-color: white; color: black; }
+            header, .card, .quick-revision { background: white; color: black; box-shadow: none; border: 1px solid #ccc; }
+            h1 { color: black; -webkit-text-fill-color: black; }
+            .section-title { color: #000; border-bottom: 1px solid #000; }
+            h3 { color: #000; }
+            .mnemonic { border: 1px solid #666; color: #000; background: #f4f4f4; }
+            .highlight, .code { color: #000; background: #eee; }
         }
     </style>
 </head>
-
 <body>
 
     <header>
-        <h1>Computer Networks: Survival Guide</h1>
-        <p style="margin-top: 10px; color: #94a3b8;">Syllabus + Model Paper Solved in Hinglish</p>
+        <h1>Cyber Security: Survival Guide</h1>
+        <div class="subtitle">Unit 1 & Unit 2 - Hinglish Notes & Mnemonics</div>
     </header>
 
     <div class="container">
 
         <!-- UNIT 1 -->
-        <h2 class="section-title">📚 Unit 1: Basics & Hardware</h2>
+        <h2 class="section-title">🛡️ Unit 1: Introduction to Cyber Security</h2>
 
         <div class="card">
-            <span class="qa-tag">Q5, Q18</span> <span class="qa-tag">Q17</span>
-            <h3>Data Communication Components & Network Definition</h3>
-            <p><strong>Network:</strong> Jab do ya do se zyada devices aapas me connect hote hain data share karne ke
-                liye, use network kehte hain.</p>
-            <p><strong>5 Basic Components:</strong></p>
-            <ul>
-                <li><strong>Sender:</strong> Jo bhej raha hai (Computer/Mobile).</li>
-                <li><strong>Message:</strong> Jo data bhej raha hai (Text/Video).</li>
-                <li><strong>Transmission Medium:</strong> Rasta (Cable/Wi-Fi).</li>
-                <li><strong>Protocol:</strong> Rules (Jaise TCP/IP).</li>
-                <li><strong>Receiver:</strong> Jo le raha hai (Destination).</li>
-            </ul>
-            <div class="mnemonic">Mnemonic: <strong>"SMTP-R"</strong> (Sender, Message, Transmission Medium, Protocol,
-                Receiver)</div>
+            <h3>1. Introduction to Information Systems</h3>
+            <p>Ek <strong>Information System (IS)</strong> ek aisa system hai jo data ko collect, process, store aur distribute karta hai. Yeh sirf computer nahi hota, isme log aur process bhi shamil hote hain.</p>
+            <p><strong>Components:</strong> Hardware, Software, Data, People, Process.</p>
+            <div class="mnemonic">Mnemonic: <strong>H</strong>um <strong>S</strong>ab <strong>D</strong>ost <strong>P</strong>rocess (Hardware, Software, Data, People, Process)</div>
         </div>
 
         <div class="card">
-            <span class="qa-tag">Q6</span> <span class="qa-tag">Q22</span>
-            <h3>Types of Networks (LAN, MAN, WAN)</h3>
+            <h3>2. Types of Information Systems</h3>
             <ul>
-                <li><strong>LAN (Local Area Network):</strong> Small area (Room, Building). <em>Example: College
-                        lab.</em></li>
-                <li><strong>MAN (Metropolitan Area Network):</strong> City level. <em>Example: Cable TV network.</em>
-                </li>
-                <li><strong>WAN (Wide Area Network):</strong> Country/Global. <em>Example: The Internet.</em></li>
+                <li><strong>TPS (Transaction Processing System):</strong> Daily basis ka kaam (e.g., ATM se paise nikalna, billing).</li>
+                <li><strong>MIS (Management Information System):</strong> Managers ke liye reports banata hai (e.g., monthly sales report).</li>
+                <li><strong>DSS (Decision Support System):</strong> Complex decisions lene me help karta hai (e.g., "Agar price badha dein toh kya hoga?").</li>
+                <li><strong>EIS (Executive Information System):</strong> Top-level CEOs ke liye (overall company ka dashboard).</li>
             </ul>
-            <div class="mnemonic">Mnemonic: <strong>L</strong>ittle <strong>M</strong>edium <strong>W</strong>orld (LAN
-                &lt; MAN &lt; WAN)</div>
+            <div class="mnemonic">Mnemonic: <strong>T</strong>ime <strong>M</strong>anagement <strong>D</strong>ecision <strong>E</strong>xecutive (TPS -> MIS -> DSS -> EIS)</div>
         </div>
 
         <div class="card">
-            <span class="qa-tag">Q7</span>
-            <h3>Latency & Throughput</h3>
+            <h3>3. Information Security Concepts (CIA Triad)</h3>
+            <p>Security ka pura base isi par tika hai:</p>
             <ul>
-                <li><strong>Latency (Delay):</strong> Data ko point A se B tak pahunchne me kitna time laga. (Travel
-                    time).</li>
-                <li><strong>Throughput (Speed):</strong> Actual rate of successful data transfer. (Speed of the car).
-                </li>
+                <li><strong>Confidentiality (Secrecy):</strong> Data sirf authorized logo ko dikhe.</li>
+                <li><strong>Integrity (Accuracy):</strong> Data ke sath koi chhed-chhad na ho.</li>
+                <li><strong>Availability (Uplabdhata):</strong> Data jab chahiye tab available ho.</li>
+            </ul>
+            <div class="mnemonic">Mnemonic: <strong>CIA</strong> (Central Intelligence Agency) - Confidentiality, Integrity, Availability.</div>
+        </div>
+
+        <div class="card">
+            <h3>4. Computer, Network & Application Security</h3>
+            <ul>
+                <li><strong>Computer Security:</strong> Aapke personal device (laptop/PC) ko bachana (Antivirus, Password).</li>
+                <li><strong>Network Security:</strong> Data ko raste me bachana (Firewalls, Encryption, VPN).</li>
+                <li><strong>Application Security:</strong> Software/App ko hack hone se bachana (Secure coding, OWASP guidelines).</li>
             </ul>
         </div>
 
         <div class="card">
-            <span class="qa-tag">Q10</span> <span class="qa-tag">Q23</span>
-            <h3>Network Topologies (Mesh vs Star)</h3>
+            <h3>5. Need for Information Security</h3>
             <ul>
-                <li><strong>Mesh:</strong> Har device dusre se juda hai. <em>Example: Military communication.</em>
-                    (Pros: Very secure. Cons: Bahut wiring lagti hai).</li>
-                <li><strong>Star:</strong> Sab devices ek central Hub/Switch se jude hain. <em>Example: Office
-                        network.</em> (Pros: Easy to install. Cons: Central Hub mar gaya toh network dead).</li>
+                <li>Data loss/leak se bachne ke liye (Financial loss).</li>
+                <li>Company ki reputation bachane ke liye.</li>
+                <li>Privacy laws (GDPR) ka palan karne ke liye.</li>
+                <li>National security ke liye.</li>
             </ul>
         </div>
 
         <div class="card">
-            <span class="qa-tag">Q1</span> <span class="qa-tag">Q11</span>
-            <h3>OSI Model vs TCP/IP Model</h3>
-            <p><strong>OSI Model (7 Layers - Theoretical):</strong></p>
-            <ol>
-                <li><strong>P</strong>hysical (Cables)</li>
-                <li><strong>D</strong>ata Link (Framing, MAC)</li>
-                <li><strong>N</strong>etwork (Routing, IP)</li>
-                <li><strong>T</strong>ransport (End-to-end, TCP/UDP)</li>
-                <li><strong>S</strong>ession (Start/Stop)</li>
-                <li><strong>P</strong>resentation (Encryption)</li>
-                <li><strong>A</strong>pplication (User interface)</li>
-            </ol>
-            <div class="mnemonic">Mnemonic: <strong>P</strong>lease <strong>D</strong>o <strong>N</strong>ot
-                <strong>T</strong>hrow <strong>S</strong>ausage <strong>P</strong>izza <strong>A</strong>way</div>
-            <p><strong>TCP/IP Model (4 Layers - Practical):</strong> Network Access, Internet, Transport, Application.
-            </p>
-            <p><strong>Difference:</strong> OSI is theoretical (7 layers), TCP/IP is practical/used in real life (4
-                layers).</p>
+            <h3>6. Information Assurance vs InfoSec</h3>
+            <p><strong>InfoSec</strong> ka matlab hai data ko attacks se bachana. <strong>Information Assurance (IA)</strong> thoda bada concept hai - iska matlab hai data secure hai <em>aur</em> uspe bharosa (trust) bhi hai. IA me <strong>Non-repudiation</strong> (koi ye na keh sake ki "maine ye message bheja hi nahi") shamil hota hai.</p>
         </div>
 
         <div class="card">
-            <span class="qa-tag">Q2</span> <span class="qa-tag">Q19</span>
-            <h3>Hub vs Switch vs Router</h3>
+            <h3>7. Security Risk Analysis</h3>
+            <p>Risk ka matlab hai "Khatra". Formula yaad rakho:</p>
+            <p style="text-align: center; font-size: 1.2rem;"><strong>Risk = Threat × Vulnerability × Impact</strong></p>
             <ul>
-                <li><strong>Hub:</strong> Dumb device, sabko data bhejta hai. <span class="highlight">Physical
-                        Layer</span>.</li>
-                <li><strong>Switch:</strong> Smart, sirf target ko bhejta hai (MAC address). <span
-                        class="highlight">Data Link Layer</span>.</li>
-                <li><strong>Router:</strong> Connects different networks (LAN to WAN), uses IP. <span
-                        class="highlight">Network Layer</span>.</li>
-            </ul>
-            <p><em>Note (Q19):</em> Repeater is at Physical Layer, Gateway operates at all layers (mostly Application).
-            </p>
-        </div>
-
-        <div class="card">
-            <span class="qa-tag">Q16</span>
-            <h3>Transmission Media</h3>
-            <ul>
-                <li><strong>Guided:</strong> Wires hain (Tangible). <em>Example: Twisted Pair, Fiber Optics.</em></li>
-                <li><strong>Unguided:</strong> Wireless (Intangible). <em>Example: Wi-Fi, Radio waves.</em></li>
+                <li><strong>Threat:</strong> Kya attack ho sakta hai? (Hacker)</li>
+                <li><strong>Vulnerability:</strong> Aapke system me kya weakness hai? (Weak password)</li>
+                <li><strong>Impact:</strong> Agar attack hua toh kitna nuksan hoga?</li>
             </ul>
         </div>
 
         <!-- UNIT 2 -->
-        <h2 class="section-title">⚙️ Unit 2: Data Link Layer & Error Control</h2>
+        <h2 class="section-title">🦠 Unit 2: Cyber Threats and Attacks</h2>
 
         <div class="card">
-            <span class="qa-tag">Q8</span>
-            <h3>Duties of Data Link Layer</h3>
-            <p>Major duty: <strong>Framing</strong> (Packing bits into frames) and <strong>Error Control</strong>
-                (Checking if data is corrupted).</p>
+            <h3>1. Cyber Threats & Threat Vectors</h3>
+            <p><strong>Cyber Threat:</strong> Koi bhi malicious (bad) activity jo system ko nuksan pahunchaye.</p>
+            <p><strong>Threat Vectors:</strong> Woh raste ya tarike jinse malware ya hacker system me ghus ta hai. <em>Examples: Phishing emails, Infected USB drives, Weak Wi-Fi networks.</em></p>
         </div>
 
         <div class="card">
-            <span class="qa-tag">Q9, Q15, Q21</span>
-            <h3>Stuffing (Bit vs Byte)</h3>
-            <p>Used to distinguish between actual data and control flags.</p>
+            <h3>2. Malware (Malicious Software)</h3>
+            <p>Malware ek umbrella term hai. Iske types ye hain (Exam me difference pucha ja sakta hai):</p>
             <ul>
-                <li><strong>Bit Stuffing:</strong> Agar data mein flag (`01111110`) jaisa pattern aa raha hai, toh
-                    sender `1` ke baad ek extra `0` daal deta hai.</li>
-                <li><strong>Byte Stuffing:</strong> Same concept but with bytes/characters. Extra byte (ESC) insert
-                    karte hain.</li>
+                <li><strong>Virus:</strong> Ek file (host) me chipak jata hai. Jab file open karte ho tab active hota hai. (Needs human action).</li>
+                <li><strong>Worm:</strong> Standalone hota hai, host ki zaroorat nahi hoti. Network me khud-ba-khud faelta hai (Fast spread).</li>
+                <li><strong>Trojan Horse:</strong> Ek useful software ki tarah dikhta hai (e.g., Free Game), par andar se hacking karta hai. (Needs human action).</li>
+                <li><strong>Spyware:</strong> Aapki activity chupke se monitor karta hai (Keyloggers - jo password type karte ho wo save karte hain).</li>
+                <li><strong>Ransomware:</strong> Aapke files ko encrypt (lock) kar deta hai aur password wapas paane ke liye paise (ransom) maangta hai.</li>
             </ul>
+            <div class="mnemonic">Mnemonic for Malware: <strong>V</strong>ery <strong>W</strong>icked <strong>T</strong>hings <strong>S</strong>pread <strong>R</strong>apidly (Virus, Worm, Trojan, Spyware, Ransomware)</div>
         </div>
 
         <div class="card">
-            <span class="qa-tag">Q3</span> <span class="qa-tag">Q12</span>
-            <h3>Error Detection: CRC (Cyclic Redundancy Check)</h3>
-            <p><strong>Concept:</strong> Data ko generator polynomial se divide karte hain. Remainder hi CRC hota hai.
-            </p>
-            <p><strong>Steps:</strong></p>
-            <ol>
-                <li><strong>Append Zeros:</strong> Generator jitna lamba hai (suppose 4 bits), data ke end mein utne
-                    minus 1 (i.e., 3) zeros lagao.</li>
-                <li><strong>XOR Division:</strong> Binary division karo (XOR logic use karo).</li>
-                <li><strong>Remainder:</strong> Jo bacha wo CRC hai.</li>
-                <li><strong>Codeword:</strong> Original Data + CRC.</li>
-            </ol>
-            <p><em>Exam Tip: Binary XOR calculation zaroor practice karo paper pe.</em></p>
+            <h3>3. Advanced Persistent Threats (APTs)</h3>
+            <p>Yeh ek bahut hi khatarnak hacker group hota hai (usually government sponsored). Yeh ek din me attack nahi karte. <strong>Yeh system ke andar ghus kar mahino tak chupchap rehte hain</strong> aur data churate rehte hain. (Stealthy aur long-term attack).</p>
         </div>
 
         <div class="card">
-            <span class="qa-tag">Q5</span> <span class="qa-tag">Q13</span>
-            <h3>Error Correction: Hamming Code</h3>
-            <p><strong>Rule:</strong> Number of parity bits \(r\) formula: <strong>\(2^r \geq m + r + 1\)</strong>
-                (where \(m\) = data bits).</p>
-            <p><strong>Steps for Data 10011 (5 bits):</strong></p>
-            <ol>
-                <li><strong>Find r:</strong> Try \(r=4\): \(2^4 = 16\), \(5+4+1=10\). \(16 \geq 10\). So, 4 parity bits.
-                </li>
-                <li><strong>Positions:</strong> Parity bits at 1, 2, 4, 8.</li>
-                <li><strong>Even Parity Calculation:</strong> Make total number of 1s even for each group (P1 checks
-                    1,3,5,7,9; P2 checks 2,3,6,7, etc.).</li>
-            </ol>
+            <h3>4. Steganography</h3>
+            <p>Data hiding technique. Isme secret message ko kisi normal file (jaise Image, Audio, Video) ke andar chhupa diya jata hai taaki kisi ko shak na ho. <em>Example: Ek JPG photo ke andar text file chhupa dena.</em></p>
+            <div class="mnemonic">Mnemonic: <strong>Stego</strong> = Covered (Chhupana). Cryptography me data dikhta hai par samajh nahi aata, Steganography me data dikhta hi nahi.</div>
         </div>
 
         <div class="card">
-            <span class="qa-tag">Q14</span> <span class="qa-tag">Q20</span>
-            <h3>ARQ (Automatic Repeat reQuest)</h3>
+            <h3>5. Credit Card & Debit Card Security</h3>
+            <p><strong>Hone wale Attacks:</strong></p>
             <ul>
-                <li><strong>Go-Back-N (GBN):</strong> Ek packet kharab hua toh us packet se lekar piche ke saare packets
-                    dobara bhejta hai.</li>
-                <li><strong>Selective Repeat (SR):</strong> Sirf kharab wala packet dobara bheja jata hai.</li>
+                <li><strong>Skimming:</strong> Card reader me chip lagakar card ka data chura lena.</li>
+                <li><strong>Phishing:</strong> Fake call/email karke OTP ya CVV maang lena.</li>
             </ul>
-            <p><strong>Q20 Answer:</strong> <strong>Selective Repeat</strong> is more efficient on noisy links because
-                it only retransmits the lost/damaged frames, saving bandwidth.</p>
+            <p><strong>Security Measures:</strong> EMV Chip (jo card me hota hai), OTP verification, CVV (jo card ke piche hota hai), aur tokenization (card details hide karna online payment me).</p>
         </div>
 
         <!-- QUICK REVISION -->
-        <div class="quick-snips">
-            <h2>⚡ Quick Memo Snippets (Ratta Maar)</h2>
+        <div class="quick-revision">
+            <h2>⚡ Last Minute Ratta (Memo Snippets)</h2>
             <ul>
-                <li><strong>Components:</strong> Sender, Receiver, Message, Medium, Protocol.</li>
-                <li><strong>OSI Layers:</strong> Physical, Data Link, Network, Transport, Session, Presentation,
-                    Application.</li>
-                <li><strong>Devices:</strong> Hub (Physical) | Switch (Data Link) | Router (Network).</li>
-                <li><strong>Networks:</strong> LAN (Building) | MAN (City) | WAN (World).</li>
-                <li><strong>CRC:</strong> Binary Division (XOR). Remainder = CRC.</li>
-                <li><strong>Hamming:</strong> \(2^r \geq m+r+1\). Even parity = total 1s even.</li>
-                <li><strong>Topologies:</strong> Mesh (Secure, Expensive) | Star (Central Hub, Easy).</li>
-                <li><strong>ARQ:</strong> GBN (Resends all) vs SR (Resends only lost). SR is better for noisy links.
-                </li>
+                <li><strong>CIA Triad:</strong> Confidentiality, Integrity, Availability.</li>
+                <li><strong>InfoSec vs IA:</strong> InfoSec sirf protect karta hai, IA trust aur non-repudiation guarantee karta hai.</li>
+                <li><strong>Risk Formula:</strong> Risk = Threat × Vulnerability × Impact.</li>
+                <li><strong>Virus vs Worm:</strong> Virus ko host (file) chahiye, Worm khud faelta hai network me.</li>
+                <li><strong>Trojan:</strong> Looks good, acts bad (Fake software).</li>
+                <li><strong>Ransomware:</strong> Files lock + Paisa maangna.</li>
+                <li><strong>APTs:</strong> Long-term, stealthy hackers (Mahino tak chhupe rehte hain).</li>
+                <li><strong>Steganography:</strong> Image/Video ke andar secret data chhupana.</li>
+                <li><strong>Card Security:</strong> Skimming (card clone) aur Phishing (OTP/CVV maangna) se bacho.</li>
             </ul>
         </div>
 
     </div>
 
 </body>
-
 </html>
