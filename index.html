@@ -1,291 +1,806 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cyber Security - Survival Guide</title>
-    <style>
-        :root {
-            --bg-color: #0b1120;
-            --text-color: #cbd5e1;
-            --primary: #06b6d4;
-            --secondary: #8b5cf6;
-            --card-bg: #1e293b;
-            --accent: #f43f5e;
-            --success: #10b981;
-            --warning: #f59e0b;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Virtualization + AWS EC2 — Hinglish Notes</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Segoe UI',system-ui,-apple-system,'Helvetica Neue',sans-serif;
+    background:#f1f5f9;color:#1e293b;line-height:1.68;-webkit-font-smoothing:antialiased;
+  }
+  /* ---------- progress ---------- */
+  .progress{position:fixed;top:0;left:0;height:4px;width:0;
+    background:linear-gradient(90deg,#6366f1,#a855f7,#06b6d4);z-index:999;transition:width .1s linear}
 
-        body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            line-height: 1.7;
-            margin: 0;
-            padding: 0;
-        }
+  /* ---------- hero ---------- */
+  .hero{
+    background:
+      radial-gradient(circle at 15% 20%, rgba(99,102,241,.85), transparent 55%),
+      radial-gradient(circle at 85% 0%, rgba(168,85,247,.75), transparent 50%),
+      linear-gradient(135deg,#1e1b4b,#4c1d95 55%,#0e7490);
+    color:#fff;padding:58px 20px 70px;text-align:center;position:relative;overflow:hidden;
+  }
+  .hero::after{
+    content:"";position:absolute;inset:0;
+    background-image:radial-gradient(rgba(255,255,255,.12) 1px, transparent 1px);
+    background-size:22px 22px;opacity:.5;pointer-events:none;
+  }
+  .hero .pill{
+    display:inline-block;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);
+    padding:6px 16px;border-radius:999px;font-size:.78rem;letter-spacing:.08em;
+    text-transform:uppercase;margin-bottom:18px;backdrop-filter:blur(6px);
+  }
+  .hero h1{font-size:clamp(1.7rem,4.5vw,2.8rem);line-height:1.25;font-weight:800}
+  .hero h1 span{background:linear-gradient(90deg,#fde68a,#67e8f9);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero p{margin-top:14px;font-size:1rem;opacity:.9;max-width:640px;margin-left:auto;margin-right:auto}
 
-        header {
-            background: linear-gradient(135deg, #1e1b4b 0%, #0b1120 100%);
-            padding: 2.5rem 1rem;
-            text-align: center;
-            border-bottom: 2px solid var(--primary);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.6);
-        }
+  /* ---------- nav ---------- */
+  nav{
+    position:sticky;top:0;z-index:900;background:rgba(255,255,255,.9);
+    backdrop-filter:blur(12px);border-bottom:1px solid #e2e8f0;
+    display:flex;gap:8px;justify-content:center;flex-wrap:wrap;padding:10px 14px;
+  }
+  nav a{
+    text-decoration:none;color:#475569;font-size:.86rem;font-weight:600;
+    padding:7px 15px;border-radius:999px;transition:.2s;white-space:nowrap;
+  }
+  nav a:hover{background:#eef2ff;color:#4338ca;transform:translateY(-1px)}
 
-        h1 {
-            margin: 0;
-            font-size: 2.5rem;
-            background: -webkit-linear-gradient(45deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: 1px;
-        }
+  /* ---------- layout ---------- */
+  main{max-width:960px;margin:0 auto;padding:34px 16px 80px}
+  section{scroll-margin-top:70px}
+  .unit-head{
+    display:flex;align-items:center;gap:14px;margin:44px 0 22px;
+    padding:18px 22px;border-radius:18px;color:#fff;box-shadow:0 10px 28px -12px rgba(30,27,75,.55);
+  }
+  .unit-head.u1{background:linear-gradient(120deg,#6d28d9,#4f46e5)}
+  .unit-head.u2{background:linear-gradient(120deg,#0d9488,#0891b2)}
+  .unit-head .num{
+    font-size:1.5rem;font-weight:800;background:rgba(255,255,255,.22);
+    width:50px;height:50px;display:grid;place-items:center;border-radius:14px;flex:0 0 auto;
+  }
+  .unit-head h2{font-size:1.15rem;font-weight:800;line-height:1.35}
+  .unit-head small{display:block;font-weight:500;opacity:.85;font-size:.78rem;margin-top:2px}
 
-        .subtitle {
-            color: #94a3b8;
-            margin-top: 10px;
-            font-size: 1.1rem;
-        }
+  /* ---------- card ---------- */
+  .card{
+    background:#fff;border-radius:16px;padding:22px 22px 20px;margin-bottom:16px;
+    border-left:5px solid var(--c,#6366f1);
+    box-shadow:0 2px 6px rgba(15,23,42,.05),0 12px 30px -20px rgba(15,23,42,.35);
+    transition:.22s;
+  }
+  .card:hover{transform:translateY(-2px);box-shadow:0 4px 10px rgba(15,23,42,.06),0 18px 36px -20px rgba(15,23,42,.45)}
+  .card h3{font-size:1.05rem;font-weight:800;color:#0f172a;margin-bottom:10px;display:flex;align-items:center;gap:9px}
+  .card h3::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--c,#6366f1);flex:0 0 auto}
+  .card h4{font-size:.94rem;font-weight:700;margin:14px 0 6px;color:#334155}
+  .card p{font-size:.94rem;color:#334155;margin-bottom:8px}
+  .card ul,.card ol{margin:6px 0 6px 20px;font-size:.94rem;color:#334155}
+  .card li{margin-bottom:5px}
+  .card li b{color:#0f172a}
+  .qref{
+    display:inline-block;font-size:.7rem;font-weight:800;letter-spacing:.05em;
+    background:#eef2ff;color:#4338ca;padding:3px 9px;border-radius:6px;margin-left:6px;
+    vertical-align:middle;
+  }
+  .qref.u2{background:#ccfbf1;color:#0f766e}
 
-        .container {
-            max-width: 900px;
-            margin: 3rem auto;
-            padding: 0 1.5rem;
-        }
+  /* ---------- mnemonic ---------- */
+  .mnem{
+    background:linear-gradient(100deg,#fffbeb,#fef3c7);
+    border:1px solid #fde68a;border-left:5px solid #f59e0b;
+    border-radius:12px;padding:12px 16px;margin:12px 0 4px;font-size:.92rem;color:#78350f;
+  }
+  .mnem b{color:#92400e}
+  .mnem .lbl{font-weight:800;letter-spacing:.04em;font-size:.72rem;text-transform:uppercase;display:block;margin-bottom:3px;color:#b45309}
 
-        .section-title {
-            font-size: 1.8rem;
-            color: var(--primary);
-            border-bottom: 2px dashed #334155;
-            padding-bottom: 0.5rem;
-            margin-top: 3rem;
-            margin-bottom: 2rem;
-        }
+  /* ---------- two column ---------- */
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:8px}
+  .box{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:14px 16px}
+  .box.good{background:#f0fdf4;border-color:#bbf7d0}
+  .box.bad{background:#fef2f2;border-color:#fecaca}
+  .box h5{font-size:.85rem;font-weight:800;margin-bottom:8px;letter-spacing:.02em}
+  .box.good h5{color:#15803d}
+  .box.bad h5{color:#b91c1c}
+  .box ul{margin-left:18px;font-size:.88rem}
+  .box li{margin-bottom:4px}
 
-        .card {
-            background-color: var(--card-bg);
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-            border-left: 4px solid var(--secondary);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
+  /* ---------- table ---------- */
+  .tblwrap{overflow-x:auto;margin:12px 0;border-radius:12px;border:1px solid #e2e8f0}
+  table{width:100%;border-collapse:collapse;font-size:.88rem;min-width:460px;background:#fff}
+  th{background:#f1f5f9;text-align:left;padding:10px 14px;font-weight:800;color:#334155;font-size:.8rem;text-transform:uppercase;letter-spacing:.04em;border-bottom:1px solid #e2e8f0}
+  td{padding:10px 14px;border-bottom:1px solid #eef2f7;color:#334155;vertical-align:top}
+  tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:#f8fafc}
+  td b{color:#0f172a}
 
-        .card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 15px rgba(0,0,0,0.5);
-        }
+  /* ---------- scenario ---------- */
+  details.qa{
+    background:#fff;border-radius:14px;margin-bottom:12px;border:1px solid #e2e8f0;
+    border-left:5px solid #f59e0b;padding:0;overflow:hidden;
+    box-shadow:0 2px 8px rgba(15,23,42,.04);
+  }
+  details.qa summary{
+    cursor:pointer;list-style:none;padding:15px 20px;font-weight:700;font-size:.94rem;
+    color:#0f172a;display:flex;align-items:flex-start;gap:10px;
+  }
+  details.qa summary::-webkit-details-marker{display:none}
+  details.qa summary::before{content:"▸";color:#f59e0b;font-weight:900;transition:.2s;display:inline-block}
+  details.qa[open] summary::before{transform:rotate(90deg)}
+  details.qa .ans{padding:0 20px 18px 20px;font-size:.92rem;color:#334155;border-top:1px dashed #e2e8f0;margin-top:2px;padding-top:14px}
+  details.qa .ans ul{margin-left:20px;margin-top:6px}
+  details.qa .ans li{margin-bottom:5px}
 
-        h3 {
-            margin-top: 0;
-            color: var(--accent);
-            font-size: 1.3rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+  /* ---------- code ---------- */
+  pre{
+    background:#0f172a;color:#e2e8f0;padding:16px 18px;border-radius:12px;
+    overflow-x:auto;font-size:.82rem;line-height:1.7;margin:12px 0;
+    font-family:'Consolas','Courier New',monospace;
+  }
+  pre .cm{color:#64748b}
+  code.inl{background:#eef2ff;color:#4338ca;padding:2px 7px;border-radius:5px;font-size:.85em;font-weight:600}
 
-        strong { color: #f8fafc; }
-        .highlight { color: var(--warning); font-weight: 600; }
-        .code { font-family: monospace; background: #000; padding: 2px 6px; border-radius: 4px; color: var(--success); }
+  /* ---------- qmap ---------- */
+  .qmap{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px;margin-top:12px}
+  .qmap div{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:10px 13px;font-size:.85rem;color:#475569}
+  .qmap div b{color:#4338ca}
+  .qmap div span{display:block;color:#0f766e;font-weight:700;font-size:.82rem;margin-top:2px}
 
-        .mnemonic {
-            background-color: rgba(6, 182, 212, 0.1);
-            border: 1px solid var(--primary);
-            padding: 12px;
-            border-radius: 8px;
-            margin-top: 15px;
-            color: var(--primary);
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-        }
+  footer{text-align:center;padding:30px 16px 50px;color:#94a3b8;font-size:.82rem}
 
-        .mnemonic::before {
-            content: "💡";
-            margin-right: 10px;
-            font-size: 1.2rem;
-        }
-
-        ul, ol { padding-left: 20px; }
-        li { margin-bottom: 8px; }
-
-        .quick-revision {
-            background: linear-gradient(135deg, #1e1b4b 0%, #2e1065 100%);
-            border: 2px solid var(--secondary);
-            border-radius: 12px;
-            padding: 2rem;
-            margin-top: 3rem;
-            margin-bottom: 3rem;
-            box-shadow: 0 0 20px rgba(139, 92, 246, 0.2);
-        }
-
-        .quick-revision h2 {
-            color: var(--secondary);
-            text-align: center;
-            margin-top: 0;
-            font-size: 1.6rem;
-        }
-
-        .quick-revision ul { list-style-type: none; padding: 0; }
-        .quick-revision li {
-            background: rgba(255,255,255,0.05);
-            padding: 12px;
-            margin-bottom: 10px;
-            border-radius: 8px;
-            border-left: 3px solid var(--warning);
-        }
-
-        /* Print settings for PDF export */
-        @media print {
-            body { background-color: white; color: black; }
-            header, .card, .quick-revision { background: white; color: black; box-shadow: none; border: 1px solid #ccc; }
-            h1 { color: black; -webkit-text-fill-color: black; }
-            .section-title { color: #000; border-bottom: 1px solid #000; }
-            h3 { color: #000; }
-            .mnemonic { border: 1px solid #666; color: #000; background: #f4f4f4; }
-            .highlight, .code { color: #000; background: #eee; }
-        }
-    </style>
+  @media (max-width:720px){
+    .two{grid-template-columns:1fr}
+    .card{padding:18px 16px}
+    .hero{padding:44px 16px 52px}
+  }
+</style>
 </head>
 <body>
 
-    <header>
-        <h1>Cyber Security: Survival Guide</h1>
-        <div class="subtitle">Unit 1 & Unit 2 - Hinglish Notes & Mnemonics</div>
-    </header>
+<div class="progress"></div>
 
-    <div class="container">
+<header class="hero">
+  <div class="pill">Question Bank Notes · Hinglish</div>
+  <h1>Virtualization + AWS EC2<br><span>Simple Notes, Full Marks</span></h1>
+  <p>Sirf syllabus ke topics — no extra bakwaas. Mnemonics, tables aur scenario answers ke saath.</p>
+</header>
 
-        <!-- UNIT 1 -->
-        <h2 class="section-title">🛡️ Unit 1: Introduction to Cyber Security</h2>
+<nav>
+  <a href="#u1">🖥️ Unit 1 — Virtualization</a>
+  <a href="#scen">🎯 Scenario Qs</a>
+  <a href="#u2">☁️ Unit 2 — EC2</a>
+  <a href="#qmap">🗺️ Q-Bank Map</a>
+</nav>
 
-        <div class="card">
-            <h3>1. Introduction to Information Systems</h3>
-            <p>Ek <strong>Information System (IS)</strong> ek aisa system hai jo data ko collect, process, store aur distribute karta hai. Yeh sirf computer nahi hota, isme log aur process bhi shamil hote hain.</p>
-            <p><strong>Components:</strong> Hardware, Software, Data, People, Process.</p>
-            <div class="mnemonic">Mnemonic: <strong>H</strong>um <strong>S</strong>ab <strong>D</strong>ost <strong>P</strong>rocess (Hardware, Software, Data, People, Process)</div>
-        </div>
+<main>
 
-        <div class="card">
-            <h3>2. Types of Information Systems</h3>
-            <ul>
-                <li><strong>TPS (Transaction Processing System):</strong> Daily basis ka kaam (e.g., ATM se paise nikalna, billing).</li>
-                <li><strong>MIS (Management Information System):</strong> Managers ke liye reports banata hai (e.g., monthly sales report).</li>
-                <li><strong>DSS (Decision Support System):</strong> Complex decisions lene me help karta hai (e.g., "Agar price badha dein toh kya hoga?").</li>
-                <li><strong>EIS (Executive Information System):</strong> Top-level CEOs ke liye (overall company ka dashboard).</li>
-            </ul>
-            <div class="mnemonic">Mnemonic: <strong>T</strong>ime <strong>M</strong>anagement <strong>D</strong>ecision <strong>E</strong>xecutive (TPS -> MIS -> DSS -> EIS)</div>
-        </div>
-
-        <div class="card">
-            <h3>3. Information Security Concepts (CIA Triad)</h3>
-            <p>Security ka pura base isi par tika hai:</p>
-            <ul>
-                <li><strong>Confidentiality (Secrecy):</strong> Data sirf authorized logo ko dikhe.</li>
-                <li><strong>Integrity (Accuracy):</strong> Data ke sath koi chhed-chhad na ho.</li>
-                <li><strong>Availability (Uplabdhata):</strong> Data jab chahiye tab available ho.</li>
-            </ul>
-            <div class="mnemonic">Mnemonic: <strong>CIA</strong> (Central Intelligence Agency) - Confidentiality, Integrity, Availability.</div>
-        </div>
-
-        <div class="card">
-            <h3>4. Computer, Network & Application Security</h3>
-            <ul>
-                <li><strong>Computer Security:</strong> Aapke personal device (laptop/PC) ko bachana (Antivirus, Password).</li>
-                <li><strong>Network Security:</strong> Data ko raste me bachana (Firewalls, Encryption, VPN).</li>
-                <li><strong>Application Security:</strong> Software/App ko hack hone se bachana (Secure coding, OWASP guidelines).</li>
-            </ul>
-        </div>
-
-        <div class="card">
-            <h3>5. Need for Information Security</h3>
-            <ul>
-                <li>Data loss/leak se bachne ke liye (Financial loss).</li>
-                <li>Company ki reputation bachane ke liye.</li>
-                <li>Privacy laws (GDPR) ka palan karne ke liye.</li>
-                <li>National security ke liye.</li>
-            </ul>
-        </div>
-
-        <div class="card">
-            <h3>6. Information Assurance vs InfoSec</h3>
-            <p><strong>InfoSec</strong> ka matlab hai data ko attacks se bachana. <strong>Information Assurance (IA)</strong> thoda bada concept hai - iska matlab hai data secure hai <em>aur</em> uspe bharosa (trust) bhi hai. IA me <strong>Non-repudiation</strong> (koi ye na keh sake ki "maine ye message bheja hi nahi") shamil hota hai.</p>
-        </div>
-
-        <div class="card">
-            <h3>7. Security Risk Analysis</h3>
-            <p>Risk ka matlab hai "Khatra". Formula yaad rakho:</p>
-            <p style="text-align: center; font-size: 1.2rem;"><strong>Risk = Threat × Vulnerability × Impact</strong></p>
-            <ul>
-                <li><strong>Threat:</strong> Kya attack ho sakta hai? (Hacker)</li>
-                <li><strong>Vulnerability:</strong> Aapke system me kya weakness hai? (Weak password)</li>
-                <li><strong>Impact:</strong> Agar attack hua toh kitna nuksan hoga?</li>
-            </ul>
-        </div>
-
-        <!-- UNIT 2 -->
-        <h2 class="section-title">🦠 Unit 2: Cyber Threats and Attacks</h2>
-
-        <div class="card">
-            <h3>1. Cyber Threats & Threat Vectors</h3>
-            <p><strong>Cyber Threat:</strong> Koi bhi malicious (bad) activity jo system ko nuksan pahunchaye.</p>
-            <p><strong>Threat Vectors:</strong> Woh raste ya tarike jinse malware ya hacker system me ghus ta hai. <em>Examples: Phishing emails, Infected USB drives, Weak Wi-Fi networks.</em></p>
-        </div>
-
-        <div class="card">
-            <h3>2. Malware (Malicious Software)</h3>
-            <p>Malware ek umbrella term hai. Iske types ye hain (Exam me difference pucha ja sakta hai):</p>
-            <ul>
-                <li><strong>Virus:</strong> Ek file (host) me chipak jata hai. Jab file open karte ho tab active hota hai. (Needs human action).</li>
-                <li><strong>Worm:</strong> Standalone hota hai, host ki zaroorat nahi hoti. Network me khud-ba-khud faelta hai (Fast spread).</li>
-                <li><strong>Trojan Horse:</strong> Ek useful software ki tarah dikhta hai (e.g., Free Game), par andar se hacking karta hai. (Needs human action).</li>
-                <li><strong>Spyware:</strong> Aapki activity chupke se monitor karta hai (Keyloggers - jo password type karte ho wo save karte hain).</li>
-                <li><strong>Ransomware:</strong> Aapke files ko encrypt (lock) kar deta hai aur password wapas paane ke liye paise (ransom) maangta hai.</li>
-            </ul>
-            <div class="mnemonic">Mnemonic for Malware: <strong>V</strong>ery <strong>W</strong>icked <strong>T</strong>hings <strong>S</strong>pread <strong>R</strong>apidly (Virus, Worm, Trojan, Spyware, Ransomware)</div>
-        </div>
-
-        <div class="card">
-            <h3>3. Advanced Persistent Threats (APTs)</h3>
-            <p>Yeh ek bahut hi khatarnak hacker group hota hai (usually government sponsored). Yeh ek din me attack nahi karte. <strong>Yeh system ke andar ghus kar mahino tak chupchap rehte hain</strong> aur data churate rehte hain. (Stealthy aur long-term attack).</p>
-        </div>
-
-        <div class="card">
-            <h3>4. Steganography</h3>
-            <p>Data hiding technique. Isme secret message ko kisi normal file (jaise Image, Audio, Video) ke andar chhupa diya jata hai taaki kisi ko shak na ho. <em>Example: Ek JPG photo ke andar text file chhupa dena.</em></p>
-            <div class="mnemonic">Mnemonic: <strong>Stego</strong> = Covered (Chhupana). Cryptography me data dikhta hai par samajh nahi aata, Steganography me data dikhta hi nahi.</div>
-        </div>
-
-        <div class="card">
-            <h3>5. Credit Card & Debit Card Security</h3>
-            <p><strong>Hone wale Attacks:</strong></p>
-            <ul>
-                <li><strong>Skimming:</strong> Card reader me chip lagakar card ka data chura lena.</li>
-                <li><strong>Phishing:</strong> Fake call/email karke OTP ya CVV maang lena.</li>
-            </ul>
-            <p><strong>Security Measures:</strong> EMV Chip (jo card me hota hai), OTP verification, CVV (jo card ke piche hota hai), aur tokenization (card details hide karna online payment me).</p>
-        </div>
-
-        <!-- QUICK REVISION -->
-        <div class="quick-revision">
-            <h2>⚡ Last Minute Ratta (Memo Snippets)</h2>
-            <ul>
-                <li><strong>CIA Triad:</strong> Confidentiality, Integrity, Availability.</li>
-                <li><strong>InfoSec vs IA:</strong> InfoSec sirf protect karta hai, IA trust aur non-repudiation guarantee karta hai.</li>
-                <li><strong>Risk Formula:</strong> Risk = Threat × Vulnerability × Impact.</li>
-                <li><strong>Virus vs Worm:</strong> Virus ko host (file) chahiye, Worm khud faelta hai network me.</li>
-                <li><strong>Trojan:</strong> Looks good, acts bad (Fake software).</li>
-                <li><strong>Ransomware:</strong> Files lock + Paisa maangna.</li>
-                <li><strong>APTs:</strong> Long-term, stealthy hackers (Mahino tak chhupe rehte hain).</li>
-                <li><strong>Steganography:</strong> Image/Video ke andar secret data chhupana.</li>
-                <li><strong>Card Security:</strong> Skimming (card clone) aur Phishing (OTP/CVV maangna) se bacho.</li>
-            </ul>
-        </div>
-
+<!-- ================= UNIT 1 ================= -->
+<section id="u1">
+  <div class="unit-head u1">
+    <div class="num">1</div>
+    <div>
+      <h2>Concept of Virtualization</h2>
+      <small>Need · Pros/Cons · Types · Hypervisors · VMs · Techniques · Cloud Role</small>
     </div>
+  </div>
+
+  <!-- 1 -->
+  <div class="card" style="--c:#6d28d9">
+    <h3>Virtualization kya hai? <span class="qref">Q1</span></h3>
+    <p><b>Simple:</b> Ek physical computer ke resources (CPU, RAM, storage, network) ko software ki madad se <b>kai alag-alag virtual computers</b> me baant dena = Virtualization.</p>
+    <p><b>Definition (likhne layak):</b> "Virtualization is the process of creating a virtual (logical) version of a physical resource — server, storage, network or operating system — so that multiple users or applications can use it independently."</p>
+    <div class="mnem">
+      <span class="lbl">Mnemonic</span>
+      <b>1 Hardware → Many Systems.</b> Beech me ek software layer (Hypervisor) baithta hai jo batwara karta hai.
+    </div>
+  </div>
+
+  <!-- 2 -->
+  <div class="card" style="--c:#6d28d9">
+    <h3>Need for Virtualization (zaroorat kyun?) <span class="qref">Q1</span></h3>
+    <ul>
+      <li><b>Underutilization:</b> normal physical server sirf <b>10–15%</b> use hota hai. Baaki capacity waste.</li>
+      <li><b>Cost:</b> kam hardware = kam bijli, kam AC, kam space, kam maintenance.</li>
+      <li><b>Isolation:</b> ek application crash ho to dusri na gire.</li>
+      <li><b>Fast provisioning:</b> naya server <b>minutes</b> me, weeks me nahi.</li>
+      <li><b>Backup & DR:</b> VM ek file hai — copy karo, snapshot lo, restore karo.</li>
+      <li><b>Testing & legacy:</b> purane OS aur naye apps ek hi machine par chal jate hain.</li>
+    </ul>
+    <div class="mnem">
+      <span class="lbl">Mnemonic</span>
+      <b>“U-C-I-F-B-T”</b> → <b>U</b>nderutilization, <b>C</b>ost, <b>I</b>solation, <b>F</b>ast provisioning, <b>B</b>ackup, <b>T</b>esting.
+    </div>
+  </div>
+
+  <!-- 3 -->
+  <div class="card" style="--c:#6d28d9">
+    <h3>Pros &amp; Cons of Virtualization <span class="qref">Q1</span></h3>
+    <div class="two">
+      <div class="box good">
+        <h5>✔ ADVANTAGES</h5>
+        <ul>
+          <li>Resource utilization badh jata hai</li>
+          <li>Hardware, power, cooling cost kam</li>
+          <li>Scalable &amp; flexible (VM add/remove)</li>
+          <li>Strong isolation → security</li>
+          <li>Snapshot / backup / DR aasan</li>
+          <li>Centralized management</li>
+          <li>Green IT — kam bijli</li>
+          <li>Testing &amp; development fast</li>
+        </ul>
+      </div>
+      <div class="box bad">
+        <h5>✘ DISADVANTAGES</h5>
+        <ul>
+          <li><b>Single point of failure</b> — hypervisor down = sab VMs down</li>
+          <li>Performance overhead (layer extra)</li>
+          <li>Security risk — VM escape, hypervisor attack</li>
+          <li>Complex setup, skilled staff chahiye</li>
+          <li>Licensing cost (Windows/VMware)</li>
+          <li>Hardware dependency (VT-x / AMD-V)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4 -->
+  <div class="card" style="--c:#6d28d9">
+    <h3>Types of Virtualization <span class="qref">Q2</span></h3>
+
+    <h4>1. Server Virtualization</h4>
+    <p>Ek physical server par <b>hypervisor</b> install hota hai, uske upar multiple <b>VMs (guest OS)</b> chalte hain. Har VM ko CPU, RAM, disk ka hissa milta hai.</p>
+    <p><b>Example:</b> VMware ESXi, Hyper-V. <b>Use:</b> server consolidation — 10 servers ki jagah 1 server.</p>
+
+    <h4>2. Storage Virtualization</h4>
+    <p>Kai physical storage devices ko <b>ek single logical pool</b> me combine karna (ya ek badi disk ko chhote logical volumes me todna).</p>
+    <p><b>Example:</b> SAN, LVM, RAID, EMC VPLEX. <b>Use:</b> easy management, data migration, fault tolerance.</p>
+
+    <h4>3. Network Virtualization</h4>
+    <p>Ek physical network ko kai <b>alag virtual networks</b> me divide karna — har VM apne network me, dusre se isolated.</p>
+    <p><b>Example:</b> VMware NSX, VLAN, VPN, SDN. <b>Use:</b> isolation, flexibility, kam hardware.</p>
+
+    <div class="mnem">
+      <span class="lbl">Mnemonic</span>
+      <b>S-S-N</b> = <b>S</b>erver, <b>S</b>torage, <b>N</b>etwork. (3 types hi yaad rakhne hain)
+    </div>
+  </div>
+
+  <!-- 5 -->
+  <div class="card" style="--c:#6d28d9">
+    <h3>Hypervisor (VMM) &amp; Type-I / Type-II <span class="qref">Q3</span></h3>
+    <p><b>Definition:</b> Hypervisor ek software hai jo physical hardware aur virtual machines ke beech baith kar VMs ko <b>create, run, monitor aur allocate</b> karta hai. Ise <b>Virtual Machine Monitor (VMM)</b> bhi kehte hain.</p>
+    <div class="tblwrap">
+      <table>
+        <thead><tr><th>Point</th><th>Type-I (Bare-metal)</th><th>Type-II (Hosted)</th></tr></thead>
+        <tbody>
+          <tr><td><b>Kahan install</b></td><td>Seedha hardware par</td><td>Host OS ke upar (app ki tarah)</td></tr>
+          <tr><td><b>Host OS</b></td><td>Nahi chahiye</td><td>Chahiye</td></tr>
+          <tr><td><b>Performance</b></td><td>Fast (kam overhead)</td><td>Slow (overhead zyada)</td></tr>
+          <tr><td><b>Security</b></td><td>Zyada</td><td>Kam</td></tr>
+          <tr><td><b>Use</b></td><td>Data center, cloud, production</td><td>Desktop, testing, learning</td></tr>
+          <tr><td><b>Examples</b></td><td>VMware ESXi, Hyper-V, Xen, KVM</td><td>VirtualBox, VMware Workstation, Parallels</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="mnem">
+      <span class="lbl">Mnemonic</span>
+      <b>Type-I = “Bare” = Boss</b> (hardware ka direct boss) &nbsp;|&nbsp; <b>Type-II = “Hosted” = Host ka mehmaan</b> (OS ke upar rehta hai).
+    </div>
+  </div>
+
+  <!-- 6 -->
+  <div class="card" style="--c:#6d28d9">
+    <h3>Virtual Machine — System VM &amp; Process VM <span class="qref">Q4</span></h3>
+    <p><b>VM (Virtual Machine):</b> Ek software-based computer jiska apna virtual CPU, RAM, disk aur NIC hota hai. Ye real machine ki tarah behave karta hai aur isme <b>guest OS</b> chalta hai.</p>
+
+    <h4>System VM</h4>
+    <ul>
+      <li>Poora <b>operating system</b> install hota hai.</li>
+      <li>Hypervisor ke upar chalta hai, real machine ki tarah.</li>
+      <li><b>Example:</b> VirtualBox me Ubuntu VM, AWS EC2 instance.</li>
+      <li><b>Use:</b> server consolidation, cloud, testing.</li>
+    </ul>
+
+    <h4>Process VM</h4>
+    <ul>
+      <li>Sirf <b>ek application/process</b> ko run karne ka virtual environment.</li>
+      <li><b>Koi guest OS nahi</b> — host OS ke upar application level par chalta hai.</li>
+      <li><b>Example:</b> Java Virtual Machine (JVM), .NET CLR, Rosetta (Mac).</li>
+      <li><b>Use:</b> portability — “write once, run anywhere”.</li>
+    </ul>
+
+    <div class="mnem">
+      <span class="lbl">Mnemonic</span>
+      <b>System VM = poora ghar</b> (full OS) &nbsp;|&nbsp; <b>Process VM = ek kamra</b> (sirf ek app).
+    </div>
+  </div>
+
+  <!-- 7 -->
+  <div class="card" style="--c:#6d28d9">
+    <h3>VM vs Container <span class="qref">Q10</span></h3>
+    <div class="tblwrap">
+      <table>
+        <thead><tr><th>Point</th><th>Virtual Machine</th><th>Container</th></tr></thead>
+        <tbody>
+          <tr><td><b>Guest OS</b></td><td>Haan — har VM ka apna OS</td><td>Nahi — host kernel share karta hai</td></tr>
+          <tr><td><b>Size</b></td><td>GB me</td><td>MB me</td></tr>
+          <tr><td><b>Boot time</b></td><td>Minutes</td><td>Seconds</td></tr>
+          <tr><td><b>Isolation</b></td><td>Strong (hardware level)</td><td>Process level (halka)</td></tr>
+          <tr><td><b>Hypervisor</b></td><td>Zaroori</td><td>Nahi (Docker Engine)</td></tr>
+          <tr><td><b>Best for</b></td><td>Alag OS chahiye, strong security</td><td>Lightweight, bohot saare apps</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="mnem">
+      <span class="lbl">One-line answer (Q10)</span>
+      <b>Key difference:</b> VM ka apna <b>guest OS</b> hota hai, Container <b>host ka kernel share</b> karta hai — isliye container halka aur fast hai.
+    </div>
+  </div>
+
+  <!-- 8 -->
+  <div class="card" style="--c:#6d28d9">
+    <h3>Techniques of Virtualization <span class="qref">Q5</span><span class="qref">Q11</span></h3>
+    <div class="tblwrap">
+      <table>
+        <thead><tr><th>Technique</th><th>Kaise kaam karta hai</th><th>OS modify?</th><th>Example</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><b>Full Virtualization</b></td>
+            <td>Hypervisor <b>binary translation</b> se guest OS ke instructions ko handle karta hai. Guest OS ko pata bhi nahi ki wo virtual hai.</td>
+            <td>Nahi</td>
+            <td>VMware ESXi, VirtualBox, KVM</td>
+          </tr>
+          <tr>
+            <td><b>Para-Virtualization</b></td>
+            <td>Guest OS ko <b>modify</b> karna padta hai — wo seedha hypervisor ko <b>hypercall</b> bhejta hai. Fast but OS change chahiye.</td>
+            <td>Haan</td>
+            <td>Xen (PV mode)</td>
+          </tr>
+          <tr>
+            <td><b>Hardware-Assisted</b></td>
+            <td>CPU me special instructions (<b>Intel VT-x / AMD-V</b>) hote hain jo hypervisor ko help karte hain. Best performance, OS unmodified.</td>
+            <td>Nahi</td>
+            <td>KVM, Hyper-V, VMware with VT-x</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="mnem">
+      <span class="lbl">Mnemonic</span>
+      <b>F-P-H</b> → <b>F</b>ull (no change) → <b>P</b>ara (change karna padega) → <b>H</b>ardware (CPU help karega).
+    </div>
+  </div>
+
+  <!-- 9 -->
+  <div class="card" style="--c:#6d28d9">
+    <h3>Overview of Hypervisors (Products) <span class="qref">Q6</span></h3>
+    <div class="tblwrap">
+      <table>
+        <thead><tr><th>Hypervisor</th><th>Company</th><th>Type</th><th>Key point</th></tr></thead>
+        <tbody>
+          <tr><td><b>VirtualBox</b></td><td>Oracle</td><td>Type-II</td><td>Free, open-source, desktop testing ke liye best</td></tr>
+          <tr><td><b>VMware</b></td><td>VMware (Broadcom)</td><td>ESXi = Type-I<br>Workstation = Type-II</td><td>Enterprise data center leader, vSphere/vMotion</td></tr>
+          <tr><td><b>Hyper-V</b></td><td>Microsoft</td><td>Type-I</td><td>Windows Server / Windows 10+ me built-in, Azure me use</td></tr>
+          <tr><td><b>Xen</b></td><td>Open Source (Citrix)</td><td>Type-I</td><td>Para-virtualization ke liye famous, AWS ne pehle use kiya</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="mnem">
+      <span class="lbl">Mnemonic</span>
+      <b>“V-V-H-X”</b> = VirtualBox, VMware, Hyper-V, Xen. Bas ye 4 yaad rakho.
+    </div>
+  </div>
+
+  <!-- 10 -->
+  <div class="card" style="--c:#6d28d9">
+    <h3>Role of Virtualization in Cloud <span class="qref">Q8</span></h3>
+    <ul>
+      <li><b>Foundation:</b> Cloud (IaaS) VMs par hi bana hai — AWS EC2 = virtualized servers.</li>
+      <li><b>Resource pooling:</b> ek hardware, kai customers use karte hain.</li>
+      <li><b>Multi-tenancy:</b> har customer isolated rehta hai.</li>
+      <li><b>Elasticity:</b> demand par VM banao, kaam khatam to delete — pay-as-you-go possible.</li>
+      <li><b>DR &amp; mobility:</b> VM ko ek server se dusre par live migrate kar sakte hain (vMotion).</li>
+      <li><b>Cost efficiency:</b> cloud provider ka hardware poora use hota hai.</li>
+    </ul>
+    <div class="mnem">
+      <span class="lbl">Mnemonic</span>
+      Cloud ke 4 words: <b>Pooling → Isolation → Elasticity → Migration</b>.
+    </div>
+  </div>
+
+  <!-- 11 -->
+  <div class="card" style="--c:#6d28d9">
+    <h3>VM Provisioning <span class="qref">Q7</span></h3>
+    <p><b>Definition:</b> VM provisioning ka matlab hai ek VM ko <b>create karke uske liye resources allocate karna</b> — CPU, RAM, storage, network, OS — taaki wo use ke liye ready ho jaye.</p>
+    <ul>
+      <li><b>Manual:</b> admin khud console se VM banata hai.</li>
+      <li><b>Automated:</b> templates / AMI / scripts se minutes me (auto-scaling bhi).</li>
+      <li><b>Steps:</b> Template select → resources allocate → boot → configure (user data) → hand over.</li>
+    </ul>
+  </div>
+
+  <!-- 12 -->
+  <div class="card" style="--c:#6d28d9">
+    <h3>Physical Machine vs Virtual Machine <span class="qref">Q9</span></h3>
+    <div class="tblwrap">
+      <table>
+        <thead><tr><th>Point</th><th>Physical Machine</th><th>Virtual Machine</th></tr></thead>
+        <tbody>
+          <tr><td><b>OS</b></td><td>Ek machine = ek OS</td><td>Ek machine = kai OS</td></tr>
+          <tr><td><b>Resources</b></td><td>Fixed hardware</td><td>Flexible (RAM/CPU badha sakte hain)</td></tr>
+          <tr><td><b>Provisioning</b></td><td>Hafte lagte hain</td><td>Minutes</td></tr>
+          <tr><td><b>Cost</b></td><td>Mehnga, underutilized</td><td>Sasta, better utilization</td></tr>
+          <tr><td><b>Backup</b></td><td>Hardware level</td><td>Snapshot = file copy</td></tr>
+          <tr><td><b>Hardware access</b></td><td>Direct</td><td>Hypervisor ke through</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SCENARIOS ================= -->
+<section id="scen">
+  <div class="unit-head u1" style="background:linear-gradient(120deg,#b45309,#c2410c)">
+    <div class="num">🎯</div>
+    <div>
+      <h2>Scenario Based Answers (Q12 – Q15)</h2>
+      <small>Click karke answer dekho — pehle khud socho!</small>
+    </div>
+  </div>
+
+  <details class="qa">
+    <summary>Q12. College ke paas 5 physical servers hain, sab underutilized, bijli aur maintenance cost high. Virtualization kaise help karega?</summary>
+    <div class="ans">
+      <ul>
+        <li>5 alag servers ki jagah <b>1–2 powerful physical servers</b> lo aur unpar <b>server virtualization</b> lagao (Type-I hypervisor jaise VMware ESXi).</li>
+        <li>Har application ko ek <b>VM</b> me daal do (P2V — Physical to Virtual migration).</li>
+        <li><b>Result:</b> hardware kam → bijli, AC aur maintenance cost kam; utilization 10–15% se 70–80% tak.</li>
+        <li>Backup aur DR aasan — VM snapshot le lo; ek server fail ho to VM dusre par shift kar do.</li>
+        <li>Isolation bhi milta hai — ek app crash ho to dusri VMs safe.</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="qa">
+    <summary>Q13. Company ne physical servers ko VM me migrate kiya (cost kam hui), par kai VMs ek saath chalne par slow ho jate hain. Ek advantage + ek disadvantage batao.</summary>
+    <div class="ans">
+      <p><b>Advantage:</b> <b>Cost reduction &amp; better utilization</b> — kam physical hardware, kam bijli, aur hardware ka poora use.</p>
+      <p><b>Disadvantage:</b> <b>Performance overhead / resource contention</b> — ek hi hardware par zyada VMs chalne se CPU, RAM aur disk ke liye competition ("noisy neighbour" problem) hoti hai, jisse VMs slow ho jate hain.</p>
+      <p><b>Solution (bonus):</b> Right-sizing karo, resource limits/reservations lagao, monitoring (CloudWatch) karo, aur zyada load ho to scale up/out karo.</p>
+    </div>
+  </details>
+
+  <details class="qa">
+    <summary>Q14. Bank ko production VMs dedicated server hardware par chalane hain — Type-I ya Type-II?</summary>
+    <div class="ans">
+      <p><b>Answer: Type-I (Bare-metal) hypervisor.</b></p>
+      <ul>
+        <li>Ye seedha hardware par chalta hai — koi host OS nahi, isliye <b>overhead kam aur performance zyada</b>.</li>
+        <li><b>Security zyada</b> — banking ke liye critical, attack surface chhota.</li>
+        <li>Production/data center ke liye hi bana hai. <b>Example:</b> VMware ESXi, Microsoft Hyper-V.</li>
+        <li>Type-II host OS par depend karta hai — production ke liye suitable nahi.</li>
+      </ul>
+    </div>
+  </details>
+
+  <details class="qa">
+    <summary>Q15. Startup ko 30 lightweight web apps deploy karne hain, har app ke liye alag guest OS nahi chahiye. Container ya VM?</summary>
+    <div class="ans">
+      <p><b>Answer: Containers (e.g., Docker).</b></p>
+      <ul>
+        <li>Container <b>host kernel share</b> karta hai — har app ke liye alag guest OS nahi chahiye (requirement exactly yahi hai).</li>
+        <li><b>Lightweight (MBs)</b> aur <b>seconds me start</b> — 30 apps jaldi deploy ho jayengi.</li>
+        <li>Ek hi server par zyada density → <b>cost kam</b>.</li>
+        <li>VM tab use karte jab alag OS ya bahut strong isolation chahiye hota.</li>
+      </ul>
+    </div>
+  </details>
+</section>
+
+<!-- ================= UNIT 2 ================= -->
+<section id="u2">
+  <div class="unit-head u2">
+    <div class="num">2</div>
+    <div>
+      <h2>Amazon EC2 — Adding a Compute Layer</h2>
+      <small>AMI · Instance Types · Storage · User Data · Pricing · Spot</small>
+    </div>
+  </div>
+
+  <!-- 1 -->
+  <div class="card" style="--c:#0d9488">
+    <h3>Amazon EC2 kya hai?</h3>
+    <p><b>EC2 = Elastic Compute Cloud.</b> AWS ka <b>IaaS</b> service — cloud me <b>resizable virtual servers</b> (instances) milte hain.</p>
+    <ul>
+      <li>AMI choose karo, instance type choose karo, storage attach karo.</li>
+      <li>Security group (firewall), key pair (SSH), user data se configure karo.</li>
+      <li>Pricing <b>pay-as-you-go</b> — jitna use, utna paisa.</li>
+    </ul>
+    <div class="mnem">
+      <span class="lbl">Mnemonic</span>
+      <b>EC2 = “Elastic Compute Cloud”</b> → cloud me apna computer, jitna chahiye utna, jab chahiye tab.
+    </div>
+  </div>
+
+  <!-- 2 -->
+  <div class="card" style="--c:#0d9488">
+    <h3>AMI — Amazon Machine Image <span class="qref u2">Q3</span><span class="qref u2">Q9</span></h3>
+    <p><b>Purpose:</b> AMI ek <b>template</b> hai jisme OS, application server, applications aur settings pehle se hoti hain. EC2 instance launch karte time AMI choose karte hain — usi se instance ka <b>root volume</b> banta hai. Isse same config ke kai instances seconds me ban jate hain.</p>
+
+    <h4>Types of AMIs</h4>
+    <ul>
+      <li><b>AWS-provided (Quick Start):</b> Amazon Linux, Ubuntu, Windows Server — free aur ready.</li>
+      <li><b>AWS Marketplace:</b> third-party paid AMIs (security appliances, ERP, etc.).</li>
+      <li><b>Community AMI:</b> kisi ne public banayi — free, par bharosa khud karo.</li>
+      <li><b>Custom / Private AMI:</b> aap running instance se "Create Image" karke apni AMI banao.</li>
+    </ul>
+
+    <div class="mnem">
+      <span class="lbl">Mnemonic</span>
+      <b>AMI = “Aapki Machine ka Image”</b> (blueprint). Types: <b>Q-M-C-P</b> → Quick Start, Marketplace, Community, Private.
+    </div>
+  </div>
+
+  <!-- 3 -->
+  <div class="card" style="--c:#0d9488">
+    <h3>AMI ↔ EBS Snapshot ↔ EC2 Instance <span class="qref u2">Q10</span></h3>
+    <ul>
+      <li>Jab AMI banate hain, har EBS volume ka <b>snapshot</b> ban jata hai (S3 me store hota hai).</li>
+      <li>Instance launch karte time us snapshot se <b>naya EBS volume</b> create hota hai — ye instance ka root disk banta hai.</li>
+      <li>Instance delete karne par bhi snapshot aur AMI safe rehte hain.</li>
+    </ul>
+    <div class="mnem">
+      <span class="lbl">Mnemonic</span>
+      <b>AMI = Recipe</b> · <b>Snapshot = ingredients ka dabba</b> · <b>Instance = banaya hua cake</b> 🍰
+    </div>
+  </div>
+
+  <!-- 4 -->
+  <div class="card" style="--c:#0d9488">
+    <h3>EC2 Instance Types / Families <span class="qref u2">Q1</span></h3>
+    <p>Format: <code class="inl">family.size</code> — jaise <code class="inl">t3.micro</code>, <code class="inl">m5.large</code>, <code class="inl">c5.xlarge</code>.</p>
+    <div class="tblwrap">
+      <table>
+        <thead><tr><th>Family</th><th>Type</th><th>Use case</th></tr></thead>
+        <tbody>
+          <tr><td><b>T</b></td><td>General purpose (burstable)</td><td>Web servers, small DBs, dev/test</td></tr>
+          <tr><td><b>M</b></td><td>General purpose (balanced)</td><td>Application servers, backend</td></tr>
+          <tr><td><b>C</b></td><td>Compute optimized</td><td>Gaming, batch processing, ML inference</td></tr>
+          <tr><td><b>R / X / z</b></td><td>Memory optimized</td><td>In-memory DB (Redis), big data, SAP</td></tr>
+          <tr><td><b>I / D / H</b></td><td>Storage optimized</td><td>NoSQL, data warehouse, high IOPS</td></tr>
+          <tr><td><b>P / G / F / Inf / Trn</b></td><td>Accelerated (GPU)</td><td>ML training, graphics, video encoding</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="mnem">
+      <span class="lbl">Mnemonic</span>
+      <b>T M</b> = <b>T</b>um <b>M</b>ere (General) · <b>C</b> = <b>C</b>ompute · <b>R X</b> = <b>R</b>AM e<b>X</b>treme · <b>I D H</b> = <b>I/O D</b>isk <b>H</b>ard · <b>P G F</b> = <b>P</b>lay <b>G</b>ame <b>F</b>ast (GPU).
+    </div>
+  </div>
+
+  <!-- 5 -->
+  <div class="card" style="--c:#0d9488">
+    <h3>Instance Type select karte time kya dekhein? <span class="qref u2">Q5</span></h3>
+    <ul>
+      <li><b>CPU</b> — kitne vCPU chahiye, compute-heavy hai kya?</li>
+      <li><b>Memory (RAM)</b> — in-memory DB hai to zyada RAM.</li>
+      <li><b>Storage</b> — type (SSD/HDD), size, IOPS.</li>
+      <li><b>Network bandwidth</b> — traffic zyada to network-optimized.</li>
+      <li><b>GPU</b> — ML / graphics ke liye.</li>
+      <li><b>Workload pattern</b> — steady (Reserved) ya burst (T family / Spot).</li>
+      <li><b>Pricing &amp; region/AZ</b> — budget aur latency.</li>
+    </ul>
+    <p style="margin-top:8px"><b>Is process ko “Right-sizing” kehte hain</b> — na zyada bada, na chhota.</p>
+  </div>
+
+  <!-- 6 -->
+  <div class="card" style="--c:#0d9488">
+    <h3>EC2 Storage Options <span class="qref u2">Q4</span></h3>
+    <div class="tblwrap">
+      <table>
+        <thead><tr><th>Storage</th><th>Kya hai</th><th>Persistent?</th><th>Use</th></tr></thead>
+        <tbody>
+          <tr><td><b>EBS</b> (Elastic Block Store)</td><td>Network-attached block disk, ek instance se juda</td><td>Haan</td><td>OS disk, database</td></tr>
+          <tr><td><b>Instance Store</b></td><td>Physically attached disk, super fast</td><td>Nahi (ephemeral)</td><td>Temp data, cache</td></tr>
+          <tr><td><b>EFS</b> (Elastic File System)</td><td>Shared NFS file system, kai EC2 ek saath use karte hain, multi-AZ</td><td>Haan</td><td>Shared files, web content</td></tr>
+          <tr><td><b>S3</b></td><td>Object storage (bucket)</td><td>Haan</td><td>Backup, static files</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="mnem">
+      <span class="lbl">Mnemonic</span>
+      <b>EBS = Ek Block Solid</b> (persistent) · <b>EFS = Everyone File Share</b> · <b>Instance Store = Temporary</b>.
+    </div>
+
+    <h4>EBS Volume create + attach karne ke steps</h4>
+    <ol>
+      <li>EC2 Console → <b>Elastic Block Store → Volumes → Create Volume</b>.</li>
+      <li>Volume type (gp3/io2), size, IOPS choose karo.</li>
+      <li><b>Same Availability Zone</b> select karo jisme instance hai (warna attach nahi hoga).</li>
+      <li>Create → volume select → <b>Actions → Attach Volume</b> → instance + device name (<code class="inl">/dev/xvdf</code>).</li>
+      <li>Instance me SSH karke format &amp; mount karo:</li>
+    </ol>
+    <pre><span class="cm"># disk check karo</span>
+lsblk
+
+<span class="cm"># format karo</span>
+sudo mkfs -t ext4 /dev/xvdf
+
+<span class="cm"># mount karo</span>
+sudo mkdir /data
+sudo mount /dev/xvdf /data
+
+<span class="cm"># permanent mount ke liye fstab me entry</span>
+sudo blkid /dev/xvdf
+sudo nano /etc/fstab</pre>
+  </div>
+
+  <!-- 7 -->
+  <div class="card" style="--c:#0d9488">
+    <h3>User Data in EC2 <span class="qref u2">Q6</span><span class="qref u2">Q7</span></h3>
+    <p><b>Purpose:</b> User data ek <b>script</b> hai jo EC2 instance launch karte time diya jata hai aur <b>first boot par automatically</b> root user ke roop me chalta hai. Isse software install, service start aur configuration automatic ho jati hai — <b>bootstrap</b> kehte hain.</p>
+
+    <h4>Example — Apache web server automatic configure karna</h4>
+    <pre>#!/bin/bash
+yum update -y
+yum install -y httpd
+systemctl start httpd
+systemctl enable httpd
+echo "&lt;h1&gt;Hello from EC2&lt;/h1&gt;" &gt; /var/www/html/index.html</pre>
+
+    <p><b>Launch + User Data steps:</b></p>
+    <ol>
+      <li>EC2 Console → <b>Launch Instance</b> → Name &amp; tags do.</li>
+      <li><b>AMI</b> choose karo (Amazon Linux 2).</li>
+      <li><b>Instance type</b> choose karo (t2.micro — free tier).</li>
+      <li><b>Key pair</b> create/select karo (SSH ke liye).</li>
+      <li><b>Network:</b> VPC, subnet, Auto-assign public IP = Enable.</li>
+      <li><b>Security group:</b> SSH (22) aur HTTP (80) allow karo.</li>
+      <li><b>Storage:</b> EBS size/type set karo.</li>
+      <li><b>Advanced details → User data</b> me upar wala script paste karo.</li>
+      <li><b>Launch</b> → status check pass hone ka wait karo → public IP browser me kholo → “Hello from EC2” dikhega.</li>
+    </ol>
+
+    <div class="mnem">
+      <span class="lbl">Mnemonic</span>
+      <b>User Data = “Pehli baar ka kaam”</b> — sirf first boot par chalta hai (default).
+    </div>
+  </div>
+
+  <!-- 8 -->
+  <div class="card" style="--c:#0d9488">
+    <h3>Other EC2 Configuration Considerations</h3>
+    <ul>
+      <li><b>Key pair</b> — SSH login ke liye (private key safe rakho).</li>
+      <li><b>Security Group</b> — virtual firewall, kaunsa port open hai.</li>
+      <li><b>VPC &amp; Subnet</b> — network aur AZ decide karta hai.</li>
+      <li><b>Public IP / Elastic IP</b> — static IP chahiye to EIP.</li>
+      <li><b>IAM Role</b> — S3 etc. access karne ke liye (password nahi chahiye).</li>
+      <li><b>User data</b> — automatic bootstrap.</li>
+      <li><b>Tags</b> — billing aur management ke liye.</li>
+      <li><b>Monitoring</b> — CloudWatch metrics/alarms.</li>
+      <li><b>Tenancy</b> — shared ya dedicated host.</li>
+      <li><b>Termination protection</b> — galti se delete na ho.</li>
+    </ul>
+  </div>
+
+  <!-- 9 -->
+  <div class="card" style="--c:#0d9488">
+    <h3>Amazon EC2 Pricing Models <span class="qref u2">Q2</span></h3>
+    <div class="tblwrap">
+      <table>
+        <thead><tr><th>Model</th><th>Kaise</th><th>Discount</th><th>Kiske liye</th></tr></thead>
+        <tbody>
+          <tr><td><b>On-Demand</b></td><td>Per second/hour, koi commitment nahi</td><td>—</td><td>Short, unpredictable workload</td></tr>
+          <tr><td><b>Reserved (RI)</b></td><td>1 ya 3 saal ka commitment</td><td>~72% tak</td><td>Steady, long-term workload</td></tr>
+          <tr><td><b>Savings Plans</b></td><td>$/hour commitment, flexible</td><td>~72% tak</td><td>Flexible long-term</td></tr>
+          <tr><td><b>Spot</b></td><td>AWS ki spare capacity, bid karo</td><td>~90% tak</td><td>Fault-tolerant, batch jobs</td></tr>
+          <tr><td><b>Dedicated Host</b></td><td>Poora physical server</td><td>—</td><td>Compliance, licensing</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="mnem">
+      <span class="lbl">Mnemonic</span>
+      <b>“Oh Really? Save Some Dollars”</b> → <b>O</b>n-Demand, <b>R</b>eserved, <b>S</b>avings Plans, <b>S</b>pot, <b>D</b>edicated.
+    </div>
+  </div>
+
+  <!-- 10 -->
+  <div class="card" style="--c:#0d9488">
+    <h3>Spot Instances &amp; Spot Instance History Page <span class="qref u2">Q2</span></h3>
+    <p><b>Spot Instance:</b> AWS ki <b>unused (spare) capacity</b> jo bohot sasti milti hai — up to <b>90% discount</b>. Par AWS kabhi bhi ise wapas le sakta hai (interruption), pehle <b>2-minute warning</b> milta hai.</p>
+    <ul>
+      <li><b>Best for:</b> batch jobs, CI/CD, big data, image rendering, stateless apps — jo ruk jaye to problem na ho.</li>
+      <li><b>Not for:</b> databases, critical production, stateful apps.</li>
+    </ul>
+
+    <h4>Spot Instance History Page ka purpose</h4>
+    <ul>
+      <li>EC2 Console → <b>Spot Requests → History / Pricing History</b>.</li>
+      <li>Dikhata hai <b>past spot prices</b> aur <b>interruption frequency</b> — per instance type aur per Availability Zone.</li>
+      <li>Isse pata chalta hai kaunsa instance type + AZ <b>stable aur sasta</b> hai.</li>
+      <li>Kam interruption rate wala type/AZ choose karne se Spot instance zyada der tak chalta hai → better decision making.</li>
+    </ul>
+    <div class="mnem">
+      <span class="lbl">Mnemonic</span>
+      <b>Spot History = “Purana price + kitni baar kata” ka record</b> → isse sahi type/AZ chunte hain.
+    </div>
+  </div>
+
+  <!-- 11 -->
+  <div class="card" style="--c:#0d9488">
+    <h3>Launching an EC2 Instance — Full Steps <span class="qref u2">Q8</span></h3>
+    <ol>
+      <li>EC2 Console → <b>Launch Instance</b>.</li>
+      <li><b>Name &amp; Tags</b> do.</li>
+      <li><b>AMI choose</b> karo (Amazon Linux / Ubuntu / Windows).</li>
+      <li><b>Instance type</b> choose karo (t2.micro etc.) — workload ke hisaab se.</li>
+      <li><b>Key pair</b> create/select karo.</li>
+      <li><b>Network settings:</b> VPC, subnet, Auto-assign public IP, Security group (SSH 22, HTTP 80).</li>
+      <li><b>Storage:</b> EBS volume size/type.</li>
+      <li><b>Advanced → User Data</b> me bootstrap script paste karo (optional).</li>
+      <li><b>Launch Instance</b> → <b>status check 2/2 passed</b> hone ka wait karo.</li>
+      <li>Public IP browser me kholo ya SSH karo: <code class="inl">ssh -i key.pem ec2-user@&lt;public-ip&gt;</code>.</li>
+    </ol>
+  </div>
+</section>
+
+<!-- ================= Q MAP ================= -->
+<section id="qmap">
+  <div class="unit-head" style="background:linear-gradient(120deg,#4338ca,#0e7490)">
+    <div class="num">🗺️</div>
+    <div>
+      <h2>Question Bank → Answer Kahan Hai</h2>
+      <small>Exam se pehle 2 minute me revise</small>
+    </div>
+  </div>
+
+  <div class="qmap">
+    <div><b>U1 Q1</b> Definition + Need + Pros/Cons<span>Cards 1, 2, 3</span></div>
+    <div><b>U1 Q2</b> Server / Storage / Network<span>Card 4</span></div>
+    <div><b>U1 Q3</b> Hypervisor Type-I / II<span>Card 5</span></div>
+    <div><b>U1 Q4</b> System VM / Process VM<span>Card 6</span></div>
+    <div><b>U1 Q5</b> Full / Para / Hardware-assisted<span>Card 8</span></div>
+    <div><b>U1 Q6</b> VirtualBox / VMware / Hyper-V / Xen<span>Card 9</span></div>
+    <div><b>U1 Q7</b> VM Provisioning<span>Card 11</span></div>
+    <div><b>U1 Q8</b> Role in Cloud<span>Card 10</span></div>
+    <div><b>U1 Q9</b> Physical vs VM<span>Card 12</span></div>
+    <div><b>U1 Q10</b> VM vs Container<span>Card 7</span></div>
+    <div><b>U1 Q11</b> Techniques + examples<span>Card 8</span></div>
+    <div><b>U1 Q12–Q15</b> Scenarios<span>Scenario section</span></div>
+    <div><b>U2 Q1</b> Instance families<span>Unit 2 · Card 4</span></div>
+    <div><b>U2 Q2</b> Spot + History page<span>Unit 2 · Card 10</span></div>
+    <div><b>U2 Q3, Q9</b> AMI + Types<span>Unit 2 · Card 2</span></div>
+    <div><b>U2 Q4</b> EBS create &amp; attach<span>Unit 2 · Card 6</span></div>
+    <div><b>U2 Q5</b> Instance type factors<span>Unit 2 · Card 5</span></div>
+    <div><b>U2 Q6, Q7</b> User Data + Launch<span>Unit 2 · Cards 7, 11</span></div>
+    <div><b>U2 Q8</b> Launch steps<span>Unit 2 · Card 11</span></div>
+    <div><b>U2 Q10</b> AMI ↔ Snapshot ↔ Instance<span>Unit 2 · Card 3</span></div>
+  </div>
+
+  <div class="mnem" style="margin-top:22px">
+    <span class="lbl">Last 60-second revision</span>
+    <b>Unit 1:</b> S-S-N (types) · Type-I = Bare Boss, Type-II = Hosted Mehmaan · F-P-H (techniques) · V-V-H-X (hypervisors) · VM = bhaari, Container = halka.<br>
+    <b>Unit 2:</b> T-M / C / R-X / I-D-H / P-G-F (families) · AMI = recipe, Snapshot = dabba, Instance = cake · User Data = first boot only · Pricing = O-R-S-S-D · Spot = sasta par interruptible.
+  </div>
+</section>
+
+</main>
+
+<footer>
+  Made for exam revision · Sirf syllabus ke topics · Question bank se hi aate hain, yehi kaafi hai ✅
+</footer>
+
+<script>
+  const bar = document.querySelector('.progress');
+  window.addEventListener('scroll', () => {
+    const h = document.documentElement;
+    const scrolled = h.scrollTop / (h.scrollHeight - h.clientHeight) * 100;
+    bar.style.width = scrolled + '%';
+  });
+</script>
 
 </body>
 </html>
